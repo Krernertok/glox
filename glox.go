@@ -1,5 +1,3 @@
 package glox
 
-import "os"
-
-func Run(file *os.File) {}
+func Run(file string) {}

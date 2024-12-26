@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 
@@ -8,18 +9,31 @@ import (
 )
 
 func runPrompt() {
-	fmt.Println("got here")
+	input := bufio.NewReader(os.Stdin)
+
+	for {
+		fmt.Printf("> ")
+
+		input, err := input.ReadString('\n')
+		if err != nil {
+			fmt.Println("Couldn't process input. Try again!")
+			continue
+		}
+
+		glox.Run(input)
+	}
 }
 
 func runFile(path string) {
-	file, err := os.Open(path)
+	file, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Printf("Error reading file: %q\n", path)
 		fmt.Println(err)
 		// EX_IOERR
 		os.Exit(74)
 	}
-	glox.Run(file)
+
+	glox.Run(string(file))
 }
 
 func main() {
