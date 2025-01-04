@@ -16,11 +16,18 @@ func runPrompt() {
 
 		input, err := input.ReadString('\n')
 		if err != nil {
-			fmt.Println("Couldn't process input. Try again!")
+			if err.Error() == "EOF" {
+				fmt.Printf("\nQuitting...\n")
+				os.Exit(0)
+			}
+			fmt.Print("Couldn't process input. Try again!\nError:\n%s\n", err)
 			continue
 		}
 
-		glox.Run(input)
+		err = glox.Run(input)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, err.Error())
+		}
 	}
 }
 
@@ -33,7 +40,11 @@ func runFile(path string) {
 		os.Exit(74)
 	}
 
-	glox.Run(string(file))
+	err = glox.Run(string(file))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		os.Exit(1)
+	}
 }
 
 func main() {
