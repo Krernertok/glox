@@ -87,7 +87,32 @@ func Run(source string) error {
 	return nil
 }
 
+type scanner struct {
+	source  string
+	start   int
+	current int
+	line    int
+	length  int
+}
+
+func newScanner(source string) *scanner {
+	return &scanner{source: source, line: 1, length: len(source)}
+}
+
+func (s scanner) scanToken() Token {
+	return nil
+}
+
 func scanTokens(source string) ([]string, error) {
 	var tokens []string
+	s := newScanner(source)
+
+	for s.current < s.length {
+		s.start = s.current
+		token := s.scanToken()
+		tokens = tokens.append(token)
+	}
+
+	tokens = tokens.append(Token{EOF, "", nil, s.line})
 	return tokens, nil
 }
